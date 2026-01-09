@@ -3,6 +3,7 @@ import { EmployeeService } from './employee.service';
 import { EmployeeController } from './employee.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Employee, EmployeeSchema } from './entities/employee.entity';
+import { BasicAuthGuard } from '../app.basicauthGuard';
 
 @Module({
   imports: [
@@ -13,6 +14,6 @@ import { Employee, EmployeeSchema } from './entities/employee.entity';
     MongooseModule.forRoot('mongodb://127.0.0.1:27017/nest_db'),
   ],
   controllers: [EmployeeController],
-  providers: [EmployeeService],
+  providers: [EmployeeService, BasicAuthGuard],
 })
 export class EmployeeModule {}
