@@ -342,7 +342,7 @@ button {
 
 .data-table th,
 .data-table td {
-  padding: 0.85rem 1rem;
+  padding: 0.6rem 1rem;
   text-align: left;
   border-bottom: 1px solid var(--table-border);
   color: var(--text-primary);
@@ -352,7 +352,7 @@ button {
   background: var(--bg-hover);
   color: var(--table-th);
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
 }
 
 .data-table tbody tr {

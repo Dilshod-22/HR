@@ -103,9 +103,9 @@ export default function CustomersPage() {
                   <td>{c.fullName || `${c.firstName} ${c.lastName}`.trim() || '—'}</td>
                   <td>{c.birthDate || '—'}</td>
                   <td>{c.phone || '—'}</td>
-                  <td>
-                    <Link to={customerEditPath(c.id)} className="link-action">Tahrirlash</Link>
-                    <button onClick={()=>deleteHandler(c.id)} >Delete</button>
+                  <td className={"flex gap-2"}>
+                    <Link to={customerEditPath(c.id)} className="link-action">✏️</Link>
+                    <button onClick={()=>deleteHandler(c.id)} >🗑️</button>
                   </td>
 
                 </tr>

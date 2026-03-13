@@ -61,17 +61,18 @@ export default function Layout() {
               type="button"
               className="sidebar-dropdown-btn"
               onClick={() => { setSpravochnikOpen((o) => !o); setKassaOpen(false); }}
-              aria-expanded={spravochnikOpen}
+              // aria-expanded={spravochnikOpen}
             >
               <span className="sidebar-dropdown-icon">📁</span>
               Spravochnik
-              <span className="sidebar-dropdown-chevron" aria-hidden>▼</span>
+              {/*<span className="sidebar-dropdown-chevron" aria-hidden>▼</span>*/}
             </button>
             <div className="sidebar-dropdown-menu" aria-hidden={!spravochnikOpen}>
               <NavLink to={ROUTES.CUSTOMERS} className={sidebarLinkClassName} onClick={closeMenus}>
                 <span className="sidebar-link-dot" aria-hidden>•</span>
                 Klient
               </NavLink>
+              {/*<br/>*/}
               <NavLink to={ROUTES.PRODUCTS} className={sidebarLinkClassName} onClick={closeMenus}>
                 <span className="sidebar-link-dot" aria-hidden>•</span>
                 Mahsulot
