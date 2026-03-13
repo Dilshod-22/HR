@@ -8,12 +8,13 @@ import CustomersPage from './pages/CustomersPage';
 import CustomerFormPage from './pages/CustomerFormPage';
 import OrdersPage from './pages/OrdersPage';
 import OrderFormPage from './pages/OrderFormPage';
-import HomePage from './pages/HomePage';
+// import HomePage from './pages/HomePage';
 import EmployeesPage from './pages/EmployeesPage';
 import InterestRatesPage from './pages/InterestRatesPage';
 import ReceiptsPage from './pages/ReceiptsPage';
 import ContractsPage from './pages/ContractsPage';
 import ContractFormPage from './pages/ContractFormPage';
+import MainPage from './pages/mainPage';
 
 const router = createBrowserRouter([
   { path: ROUTES.LOGIN, element: <LoginPage /> },
@@ -21,7 +22,7 @@ const router = createBrowserRouter([
     path: ROUTES.HOME,
     element: <Layout />,
     children: [
-      { index: true, element: <HomePage /> },
+      { index: true, element: <MainPage /> },
       { path: 'products', element: <ProductsPage /> },
       { path: 'products/new', element: <ProductFormPage /> },
       { path: 'products/:id/edit', element: <ProductFormPage /> },

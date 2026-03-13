@@ -1,7 +1,7 @@
 .layout {
   min-height: 100vh;
   display: flex;
-  background: var(--bg-page);
+  background: #09090b;
   color: var(--text-primary);
 }
 
@@ -298,7 +298,7 @@
 .main-content {
   flex: 1;
   padding: 1.5rem;
-  max-width: 1200px;
+  /*max-width: 1200px;*/
   width: 100%;
   overflow-x: auto;
   animation: mainFade 0.2s ease;
