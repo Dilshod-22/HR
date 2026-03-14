@@ -2,35 +2,33 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store';
 import {
-  fetchCustomerById,
-  createCustomer,
-  updateCustomer,
+  fetchEmployeeById,
+  createEmployee,
+  updateEmployee,
   clearCurrent,
-} from '../store/slices/customersSlice';
+} from '../store/slices/employeesSlice';
 import { ROUTES } from '../constants/routes';
 
-export default function CustomerFormPage() {
+export default function EmployeeFormPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { current, loading } = useAppSelector((s) => s.customers);
+  const { current, loading } = useAppSelector((s) => s.employees);
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [pnfl, setPnfl] = useState('');
+  const [login, setLogin] = useState('');
+  const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
+  const [pnfl, setPnfl] = useState('');
+  const [birthDate, setBirthDate] = useState('');
   const [passportSeries, setPassportSeries] = useState('');
   const [passportNumber, setPassportNumber] = useState('');
-  const [region, setRegion] = useState('');
-  const [district, setDistrict] = useState('');
-  const [address, setAddress] = useState('');
-  const [workplace, setWorkplace] = useState('');
-  const [birthDate, setBirthDate] = useState('');
 
   const isEdit = Boolean(id);
 
   useEffect(() => {
-    if (id) dispatch(fetchCustomerById(id));
+    if (id) dispatch(fetchEmployeeById(id));
     return () => { dispatch(clearCurrent()); };
   }, [id, dispatch]);
 
@@ -38,47 +36,54 @@ export default function CustomerFormPage() {
     if (current) {
       setFirstName(current.firstName);
       setLastName(current.lastName ?? '');
-      setPnfl(current.pnfl ?? '');
+      setLogin(current.login);
       setPhone(current.phone ?? '');
+      setPnfl(current.pnfl ?? '');
+      setBirthDate(current.birthDate ?? '');
       setPassportSeries(current.passportSeries ?? '');
       setPassportNumber(current.passportNumber ?? '');
-      setRegion(current.region ?? '');
-      setDistrict(current.district ?? '');
-      setAddress(current.address ?? '');
-      setWorkplace(current.workplace ?? '');
-      setBirthDate(current.birthDate ?? '');
     }
   }, [current]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!firstName.trim()) return;
-
-    const payload = {
-      firstName: firstName.trim(),
-      lastName: lastName.trim() || undefined,
-      pnfl: pnfl.trim() || undefined,
-      phone: phone.trim() || undefined,
-      passportSeries: passportSeries.trim() || undefined,
-      passportNumber: passportNumber.trim() || undefined,
-      region: region.trim() || undefined,
-      district: district.trim() || undefined,
-      address: address.trim() || undefined,
-      workplace: workplace.trim() || undefined,
-      birthDate: birthDate || undefined,
-    };
+    if (!firstName.trim() || !login.trim()) return;
+    if (!isEdit && !password.trim()) return;
 
     if (isEdit && id) {
-      await dispatch(updateCustomer({ id, body: payload }));
+      await dispatch(updateEmployee({
+        id,
+        body: {
+          firstName: firstName.trim(),
+          lastName: lastName.trim() || undefined,
+          login: login.trim(),
+          password: password.trim() || undefined,
+          phone: phone.trim() || undefined,
+          pnfl: pnfl.trim() || undefined,
+          birthDate: birthDate || undefined,
+          passportSeries: passportSeries.trim() || undefined,
+          passportNumber: passportNumber.trim() || undefined,
+        },
+      }));
     } else {
-      await dispatch(createCustomer(payload));
+      await dispatch(createEmployee({
+        firstName: firstName.trim(),
+        lastName: lastName.trim() || undefined,
+        login: login.trim(),
+        password: password.trim(),
+        phone: phone.trim() || undefined,
+        pnfl: pnfl.trim() || undefined,
+        birthDate: birthDate || undefined,
+        passportSeries: passportSeries.trim() || undefined,
+        passportNumber: passportNumber.trim() || undefined,
+      }));
     }
-    navigate(ROUTES.CUSTOMERS);
+    navigate(ROUTES.EMPLOYEES);
   };
 
   return (
     <div>
-      <h1 className="page-title">{isEdit ? 'Mijozni tahrirlash' : 'Yangi mijoz (klient)'}</h1>
+      <h1 className="page-title">{isEdit ? 'Hodimni tahrirlash' : 'Yangi hodim'}</h1>
       <form onSubmit={handleSubmit} className="form-block">
         <div className="form-row-grid">
           <label className="form-label">
@@ -99,6 +104,43 @@ export default function CustomerFormPage() {
             />
           </label>
         </div>
+        <label className="form-label">
+          Login *
+          <input
+            className="form-input"
+            value={login}
+            onChange={(e) => setLogin(e.target.value)}
+            required
+            autoComplete="username"
+          />
+        </label>
+        {!isEdit && (
+          <label className="form-label">
+            Parol *
+            <input
+              type="password"
+              className="form-input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required={!isEdit}
+              minLength={4}
+              autoComplete="new-password"
+            />
+          </label>
+        )}
+        {isEdit && (
+          <label className="form-label">
+            Yangi parol (bo‘sh qoldirsangiz o‘zgarmaydi)
+            <input
+              type="password"
+              className="form-input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              minLength={4}
+              autoComplete="new-password"
+            />
+          </label>
+        )}
         <h3 className="form-section-title">Passport</h3>
         <div className="form-row-grid">
           <label className="form-label">
@@ -121,65 +163,29 @@ export default function CustomerFormPage() {
         <label className="form-label">
           PNFL
           <input
-              type="number"
-              className="form-input"
-              value={pnfl}
-              onChange={(e) => setPnfl(e.target.value)}
-          />
-        </label>
-        <label className="form-label">
-          Tug‘ilgan sana
-          <input
-              type="date"
-              className="form-input"
-              value={birthDate}
-              onChange={(e) => setBirthDate(e.target.value)}
+            className="form-input"
+            value={pnfl}
+            onChange={(e) => setPnfl(e.target.value)}
           />
         </label>
         <label className="form-label">
           Telefon
           <input
-              className="form-input"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-          />
-        </label>
-        <label className="form-label">
-          Viloyat
-          <input
+            type="tel"
             className="form-input"
-            value={region}
-            onChange={(e) => setRegion(e.target.value)}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
           />
         </label>
         <label className="form-label">
-          Shahar / tuman
+          Tug‘ilgan sana
           <input
+            type="date"
             className="form-input"
-            value={district}
-            onChange={(e) => setDistrict(e.target.value)}
+            value={birthDate}
+            onChange={(e) => setBirthDate(e.target.value)}
           />
         </label>
-        <label className="form-label">
-          Manzil
-          <textarea
-            className="form-textarea"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            rows={2}
-          />
-        </label>
-        <label className="form-label">
-          Ish joyi
-          <input
-            className="form-input"
-            value={workplace}
-            onChange={(e) => setWorkplace(e.target.value)}
-          />
-        </label>
-
-
-
         {isEdit && current?.createdAt && (
           <p className="text-muted form-meta">
             Yaratilgan sana: {new Date(current.createdAt).toLocaleDateString('uz-UZ')}
@@ -189,7 +195,7 @@ export default function CustomerFormPage() {
           <button type="submit" disabled={loading} className="btn-primary">
             {loading ? 'Saqlanmoqda…' : isEdit ? 'Saqlash' : 'Yaratish'}
           </button>
-          <button type="button" onClick={() => navigate(ROUTES.CUSTOMERS)} className="btn-secondary">
+          <button type="button" onClick={() => navigate(ROUTES.EMPLOYEES)} className="btn-secondary">
             Bekor qilish
           </button>
         </div>

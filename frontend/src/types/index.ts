@@ -14,7 +14,7 @@ export interface Customer {
   firstName: string;
   lastName: string;
   fullName: string | null;
-  email: string | null;
+  pnfl: string | null;
   phone: string | null;
   birthDate: string | null;
   passportSeries: string | null;
@@ -74,7 +74,30 @@ export interface CustomerFilters {
 /** Mijoz uchun ko‘rsatish matni (ism + email yoki id) */
 export function getCustomerDisplayName(c: Customer): string {
   const name = c.fullName?.trim() || [c.firstName, c.lastName].filter(Boolean).join(' ').trim() || '—';
-  return c.email ? `${name} — ${c.email}` : name;
+  return c.pnfl ? `${name} — ${c.pnfl}` : name;
+}
+
+export interface Employee {
+  id: string;
+  firstName: string;
+  lastName: string;
+  fullName: string | null;
+  login: string;
+  phone: string | null;
+  pnfl: string | null;
+  birthDate: string | null;
+  passportSeries: string | null;
+  passportNumber: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface EmployeeFilters {
+  page?: number;
+  limit?: number;
+  search?: string;
+  sortBy?: 'firstName' | 'lastName' | 'fullName' | 'login' | 'createdAt';
+  sortOrder?: 'ASC' | 'DESC';
 }
 
 export interface OrderFilters {

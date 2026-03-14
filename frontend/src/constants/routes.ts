@@ -11,6 +11,8 @@ export const ROUTES = {
   ORDER_NEW: '/orders/new',
   ORDER_EDIT: '/orders/:id/edit',
   EMPLOYEES: '/employees',
+  EMPLOYEE_NEW: '/employees/new',
+  EMPLOYEE_EDIT: '/employees/:id/edit',
   INTEREST_RATES: '/interest-rates',
   RECEIPTS: '/receipts',
   CONTRACTS: '/contracts',
@@ -26,4 +28,7 @@ export function customerEditPath(id: string): string {
 
 export function orderEditPath(id: string): string {
   return `/orders/${id}/edit`;
+}
+export function employeeEditPath(id: string): string {
+  return `/employees/${id}/edit`;
 }

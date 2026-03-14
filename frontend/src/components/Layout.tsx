@@ -105,7 +105,7 @@ export default function Layout() {
               </NavLink>
               <NavLink to={ROUTES.CONTRACT_NEW} className={sidebarLinkClassName} onClick={closeMenus}>
                 <span className="sidebar-link-dot" aria-hidden>•</span>
-                Shartnoma yaratish
+                Shartnoma
               </NavLink>
               <NavLink to={ROUTES.CONTRACTS} className={sidebarLinkClassName} end onClick={closeMenus}>
                 <span className="sidebar-link-dot" aria-hidden>•</span>

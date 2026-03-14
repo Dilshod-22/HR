@@ -6,15 +6,15 @@ export class EmployeesAndCustomerNames1739130000000 implements MigrationInterfac
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
       CREATE TABLE "employees" (
-        "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
-        "first_name" character varying NOT NULL,
-        "last_name" character varying NOT NULL DEFAULT '',
-        "login" character varying NOT NULL,
-        "password_hash" character varying NOT NULL,
-        "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
-        "updatedAt" TIMESTAMP NOT NULL DEFAULT now(),
-        CONSTRAINT "PK_employees" PRIMARY KEY ("id"),
-        CONSTRAINT "UQ_employees_login" UNIQUE ("login")
+                                 "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
+                                 "first_name" character varying NOT NULL,
+                                 "last_name" character varying NOT NULL DEFAULT '',
+                                 "login" character varying NOT NULL,
+                                 "password_hash" character varying NOT NULL,
+                                 "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
+                                 "updatedAt" TIMESTAMP NOT NULL DEFAULT now(),
+                                 CONSTRAINT "PK_employees" PRIMARY KEY ("id"),
+                                 CONSTRAINT "UQ_employees_login" UNIQUE ("login")
       )
     `);
 
@@ -25,8 +25,8 @@ export class EmployeesAndCustomerNames1739130000000 implements MigrationInterfac
     `);
     await queryRunner.query(`
       UPDATE "customers" SET
-        "first_name" = COALESCE(SPLIT_PART(TRIM(COALESCE("full_name", '')), ' ', 1), ''),
-        "last_name" = COALESCE(NULLIF(TRIM(SUBSTRING(TRIM(COALESCE("full_name", '')) || ' ' FROM POSITION(' ' IN TRIM(COALESCE("full_name", '')) || ' ') + 1)), ''), '')
+                           "first_name" = COALESCE(SPLIT_PART(TRIM(COALESCE("full_name", '')), ' ', 1), ''),
+                           "last_name" = COALESCE(NULLIF(TRIM(SUBSTRING(TRIM(COALESCE("full_name", '')) || ' ' FROM POSITION(' ' IN TRIM(COALESCE("full_name", '')) || ' ') + 1)), ''), '')
       WHERE "first_name" IS NULL
     `);
     await queryRunner.query(`UPDATE "customers" SET "first_name" = COALESCE(NULLIF(TRIM("first_name"), ''), "full_name", 'N/A') WHERE "first_name" IS NULL OR "first_name" = ''`);
@@ -40,12 +40,24 @@ export class EmployeesAndCustomerNames1739130000000 implements MigrationInterfac
     await queryRunner.query(`
       ALTER TABLE "contracts"
         ADD CONSTRAINT "FK_contracts_employee"
-        FOREIGN KEY ("employeeId") REFERENCES "employees"("id") ON DELETE SET NULL
+          FOREIGN KEY ("employeeId") REFERENCES "employees"("id") ON DELETE SET NULL
     `);
     await queryRunner.query(`CREATE INDEX "IDX_contracts_employeeId" ON "contracts" ("employeeId")`);
+
+    // --- customers: email olib tashlash, pnfl qo'shish ---
+    await queryRunner.query(`ALTER TABLE "customers" DROP COLUMN IF EXISTS "email"`);
+
+    await queryRunner.query(`ALTER TABLE "customers" ADD COLUMN IF NOT EXISTS "pnfl" character varying(14)`);
+
+    await queryRunner.query(`ALTER TABLE "customers" ADD CONSTRAINT "UQ_customers_pnfl" UNIQUE ("pnfl")`);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    // --- customers: pnfl olib tashlash, email qaytarish ---
+    await queryRunner.query(`ALTER TABLE "customers" DROP CONSTRAINT IF EXISTS "UQ_customers_pnfl"`);
+    await queryRunner.query(`ALTER TABLE "customers" DROP COLUMN IF EXISTS "pnfl"`);
+    await queryRunner.query(`ALTER TABLE "customers" ADD COLUMN IF NOT EXISTS "email" character varying`);
+
     await queryRunner.query(`DROP INDEX "IDX_contracts_employeeId"`);
     await queryRunner.query(`ALTER TABLE "contracts" DROP CONSTRAINT "FK_contracts_employee"`);
     await queryRunner.query(`ALTER TABLE "contracts" DROP COLUMN "employeeId"`);

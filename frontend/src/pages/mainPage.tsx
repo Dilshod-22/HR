@@ -24,20 +24,22 @@ export default function MainPage() {
                 <table className="w-full text-left border-collapse">
                     <thead className="bg-[#27272a] text-gray-300 text-sm uppercase tracking-wider">
                     <tr>
-                        <th className="px-4 py-3 font-semibold">№</th>
-                        <th className="px-4 py-3 font-semibold">Mijoz</th>
-                        <th className="px-4 py-3 font-semibold">Telefon</th>
+                        <th className="px-4 py-3 font-semibold">Sana</th>
                         <th className="px-4 py-3 font-semibold">Raqam</th>
+                        <th className="px-4 py-3 font-semibold">Telefon</th>
+                        <th className="px-4 py-3 font-semibold">Mijoz</th>
+                        <th className="px-4 py-3 font-semibold">Kafil</th>
                         <th className="px-4 py-3 font-semibold">Filial</th>
                     </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-800">
                     <tr className="hover:bg-[#27272a]/50 transition-colors">
-                        <td className="px-4 py-4 text-sm text-gray-400">1</td>
-                        <td className="px-4 py-4 text-sm font-medium">Dilshodbek Mahammadjonov</td>
-                        <td className="px-4 py-4 text-sm text-gray-400">+998 940250435</td>
+                        <td className="px-4 py-4 text-sm text-blue-400">04.04.2025 4:52:54</td>
                         <td className="px-4 py-4 text-sm font-mono text-blue-400">044400104</td>
-                        <td className="px-4 py-4 text-sm text-gray-400">Fergana</td>
+                        <td className="px-4 py-4 text-sm text-green-400">+998 940250435</td>
+                        <td className="px-4 py-4 text-sm font-medium">Dilshodbek Mahammadjonov</td>
+                        <td className="px-4 py-4 text-sm font-medium">Xurshidbek Uraimov</td>
+                        <td className="px-4 py-4 text-sm text-blue-400">Fergana</td>
                     </tr>
                     </tbody>
                 </table>

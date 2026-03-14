@@ -50,7 +50,7 @@ export const createCustomer = createAsyncThunk(
   async (body: {
     firstName: string;
     lastName?: string;
-    email?: string;
+    pnfl?: string;
     phone?: string;
     birthDate?: string;
     passportSeries?: string;
@@ -72,7 +72,7 @@ export const updateCustomer = createAsyncThunk(
     body: Partial<{
       firstName: string;
       lastName: string;
-      email: string;
+      pnfl: string;
       phone: string;
       birthDate: string;
       passportSeries: string;
