@@ -56,6 +56,7 @@ html,
   --nav-link-active-bg: rgba(167, 139, 250, 0.15);
   --nav-link-active: #a78bfa;
   --btn-primary-bg: #7c3aed;
+  --btn-cancel-bg: #3f3f46;
   --btn-primary-hover: #8b5cf6;
   --btn-primary-color: #ffffff;
   --table-border: #27272a;
@@ -272,6 +273,20 @@ button {
   transition: background 0.2s, transform 0.1s;
 }
 
+.btn-cancel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  background: var(--btn-cancel-bg);
+  color: var(--btn-cancel-color);
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.1s;
+}
+
 .btn-primary:hover {
   background: var(--btn-primary-hover);
   text-decoration: none;
@@ -345,7 +360,7 @@ button {
   padding: 0.6rem 1rem;
   text-align: left;
   border-bottom: 1px solid var(--table-border);
-  color: var(--text-primary);
+  /* color: var(--text-primary); */
 }
 
 .data-table th {

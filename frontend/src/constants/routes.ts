@@ -15,6 +15,7 @@ export const ROUTES = {
   EMPLOYEE_EDIT: '/employees/:id/edit',
   INTEREST_RATES: '/interest-rates',
   RECEIPTS: '/receipts',
+  RECEIPT_NEW: '/receipts/new',
   CONTRACTS: '/contracts',
   CONTRACT_NEW: '/contracts/new',
 } as const;
@@ -32,3 +33,4 @@ export function orderEditPath(id: string): string {
 export function employeeEditPath(id: string): string {
   return `/employees/${id}/edit`;
 }
+

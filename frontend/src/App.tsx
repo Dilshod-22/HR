@@ -13,6 +13,7 @@ import EmployeesPage from './pages/EmployeesPage';
 import EmployeeFormPage from './pages/EmployeeFormPage';
 import InterestRatesPage from './pages/InterestRatesPage';
 import ReceiptsPage from './pages/ReceiptsPage';
+import ReceiptsFormPage from './pages/ReceiptsFormPage';
 import ContractsPage from './pages/ContractsPage';
 import ContractFormPage from './pages/ContractFormPage';
 import MainPage from './pages/mainPage';
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
       { path: 'employees/:id/edit', element: <EmployeeFormPage /> },
       { path: 'interest-rates', element: <InterestRatesPage /> },
       { path: 'receipts', element: <ReceiptsPage /> },
+      { path: 'receipts/new', element: <ReceiptsFormPage /> },
       { path: 'contracts', element: <ContractsPage /> },
       { path: 'contracts/new', element: <ContractFormPage /> },
     ],
