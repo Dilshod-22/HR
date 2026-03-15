@@ -51,6 +51,7 @@ export class ContractsService {
       totalAmount,
       monthlyAmount,
       status: ContractStatus.ACTIVE,
+      branch: dto.branch ?? null,
     });
     const saved = await this.contractRepo.save(contract);
 
@@ -108,7 +109,7 @@ export class ContractsService {
   async findOne(id: string): Promise<Contract> {
     const contract = await this.contractRepo.findOne({
       where: { id },
-      relations: ['customer', 'interestRate', 'items', 'items.product', 'paymentSchedule'],
+      relations: ['customer', 'employee', 'interestRate', 'items', 'items.product', 'paymentSchedule'],
     });
     if (!contract) throw new NotFoundException('Shartnoma topilmadi');
     return contract;

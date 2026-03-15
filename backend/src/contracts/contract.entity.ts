@@ -63,6 +63,9 @@ export class Contract {
   })
   status: ContractStatus;
 
+  @Column({ name: 'branch', type: 'varchar', nullable: true })
+  branch: string | null;
+
   @CreateDateColumn()
   createdAt: Date;
 

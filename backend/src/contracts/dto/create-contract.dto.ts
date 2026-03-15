@@ -25,6 +25,10 @@ export class CreateContractDto {
   @IsUUID()
   interestRateId: string;
 
+  @IsOptional()
+  @IsString()
+  branch?: string;
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateContractItemDto)

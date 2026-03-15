@@ -578,6 +578,10 @@ button {
 .status-shipped { color: var(--status-shipped, #8b5cf6); }
 .status-delivered { color: var(--status-delivered, #22c55e); }
 .status-cancelled { color: var(--status-cancelled, #ef4444); }
+/* Contract status */
+.status-draft { color: var(--text-muted); }
+.status-active { color: var(--status-delivered, #22c55e); }
+.status-completed { color: var(--status-shipped, #8b5cf6); }
 
 @media (max-width: 640px) {
   .navbar {

@@ -110,3 +110,54 @@ export interface OrderFilters {
   sortBy?: 'createdAt' | 'status' | 'quantity';
   sortOrder?: 'ASC' | 'DESC';
 }
+
+// Shartnoma
+export type ContractStatus = 'draft' | 'active' | 'completed' | 'cancelled';
+
+export interface ContractItem {
+  id?: string;
+  productId: string;
+  product?: Product;
+  quantity: number;
+  unitPrice: number;
+}
+
+export interface Contract {
+  id: string;
+  customerId: string;
+  employeeId: string | null;
+  guarantorName: string;
+  guarantorPhone: string | null;
+  termMonths: number;
+  interestRateId: string;
+  productTotal: number;
+  interestAmount: number;
+  totalAmount: number;
+  monthlyAmount: number;
+  status: ContractStatus;
+  branch: string | null;
+  createdAt: string;
+  updatedAt: string;
+  customer?: Customer;
+  employee?: Employee;
+  interestRate?: { id: string; termMonths: number; percentage: number; year: number };
+  items?: ContractItem[];
+  paymentSchedule?: { monthNumber: number; dueDate: string; amount: number; status: string }[];
+}
+
+export interface CreateContractItemDto {
+  productId: string;
+  quantity: number;
+  unitPrice: number;
+}
+
+export interface CreateContractDto {
+  customerId: string;
+  employeeId?: string;
+  guarantorName: string;
+  guarantorPhone?: string;
+  termMonths: number;
+  interestRateId: string;
+  branch?: string;
+  items: CreateContractItemDto[];
+}
