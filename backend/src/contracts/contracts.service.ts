@@ -4,9 +4,15 @@ import { Repository } from 'typeorm';
 import { Contract, ContractStatus } from './contract.entity';
 import { ContractItem } from './contract-item.entity';
 import { PaymentSchedule, ScheduleStatus } from './payment-schedule.entity';
+import { Customer } from '../customers/customer.entity';
 import { CreateContractDto } from './dto/create-contract.dto';
 import { InterestRatesService } from '../interest-rates/interest-rates.service';
 import { addMonths, format } from 'date-fns';
+
+function customerDisplayName(c: Customer): string {
+  const name = c.fullName?.trim() || [c.firstName, c.lastName].filter(Boolean).join(' ').trim();
+  return name || '—';
+}
 
 @Injectable()
 export class ContractsService {
@@ -17,6 +23,8 @@ export class ContractsService {
     private readonly itemRepo: Repository<ContractItem>,
     @InjectRepository(PaymentSchedule)
     private readonly scheduleRepo: Repository<PaymentSchedule>,
+    @InjectRepository(Customer)
+    private readonly customerRepo: Repository<Customer>,
     private readonly interestRatesService: InterestRatesService,
   ) {}
 
@@ -39,11 +47,17 @@ export class ContractsService {
     const totalAmount = productTotal + interestAmount;
     const monthlyAmount = totalAmount / dto.termMonths;
 
+    const guarantor = await this.customerRepo.findOne({ where: { id: dto.guarantorCustomerId } });
+    if (!guarantor) {
+      throw new BadRequestException('Kafil (mijoz) topilmadi');
+    }
+    const guarantorName = customerDisplayName(guarantor);
+
     const contract = this.contractRepo.create({
       customerId: dto.customerId,
       employeeId: dto.employeeId ?? null,
-      guarantorName: dto.guarantorName,
-      guarantorPhone: dto.guarantorPhone ?? null,
+      guarantorCustomerId: dto.guarantorCustomerId,
+      guarantorName,
       termMonths: dto.termMonths,
       interestRateId: dto.interestRateId,
       productTotal,
@@ -88,6 +102,8 @@ export class ContractsService {
     const qb = this.contractRepo
       .createQueryBuilder('contract')
       .leftJoinAndSelect('contract.customer', 'customer')
+      .leftJoinAndSelect('contract.employee', 'employee')
+      .leftJoinAndSelect('contract.guarantor', 'guarantor')
       .leftJoinAndSelect('contract.interestRate', 'interestRate')
       .orderBy('contract.createdAt', 'DESC')
       .skip(skip)
@@ -109,7 +125,7 @@ export class ContractsService {
   async findOne(id: string): Promise<Contract> {
     const contract = await this.contractRepo.findOne({
       where: { id },
-      relations: ['customer', 'employee', 'interestRate', 'items', 'items.product', 'paymentSchedule'],
+      relations: ['customer', 'employee', 'guarantor', 'interestRate', 'items', 'items.product', 'paymentSchedule'],
     });
     if (!contract) throw new NotFoundException('Shartnoma topilmadi');
     return contract;

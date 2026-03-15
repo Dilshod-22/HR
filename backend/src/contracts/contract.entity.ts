@@ -32,11 +32,11 @@ export class Contract {
   @Column({ name: 'employeeId', type: 'uuid', nullable: true })
   employeeId: string | null;
 
-  @Column({ name: 'guarantor_name', type: 'varchar' })
-  guarantorName: string;
+  @Column({ name: 'guarantor_name', type: 'varchar', nullable: true })
+  guarantorName: string | null;
 
-  @Column({ name: 'guarantor_phone', type: 'varchar', nullable: true })
-  guarantorPhone: string | null;
+  @Column({ name: 'guarantorCustomerId', type: 'uuid', nullable: true })
+  guarantorCustomerId: string | null;
 
   @Column({ name: 'term_months', type: 'int' })
   termMonths: number;
@@ -79,6 +79,10 @@ export class Contract {
   @ManyToOne(() => Employee, (e) => e.contracts, { onDelete: 'SET NULL' })
   @JoinColumn({ name: 'employeeId' })
   employee: Employee | null;
+
+  @ManyToOne(() => Customer, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'guarantorCustomerId' })
+  guarantor: Customer | null;
 
   @ManyToOne(() => InterestRate, { onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'interestRateId' })

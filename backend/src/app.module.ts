@@ -14,6 +14,7 @@ import { ContractsAndCustomers1739120000000 } from './migrations/1739120000000-C
 import { EmployeesAndCustomerNames1739130000000 } from './migrations/1739130000000-EmployeesAndCustomerNames';
 import { EmployeeExtraFields1739140000000 } from './migrations/1739140000000-EmployeeExtraFields';
 import { ContractBranch1739150000000 } from './migrations/1739150000000-ContractBranch';
+import { ContractGuarantorCustomer1739160000000 } from './migrations/1739160000000-ContractGuarantorCustomer';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { ContractBranch1739150000000 } from './migrations/1739150000000-Contract
       database: process.env.DB_DATABASE || 'railway',
       autoLoadEntities: true,
       synchronize: false,
-      migrations: [InitialSchema1739112000000, ContractsAndCustomers1739120000000, EmployeesAndCustomerNames1739130000000, EmployeeExtraFields1739140000000, ContractBranch1739150000000],
+      migrations: [InitialSchema1739112000000, ContractsAndCustomers1739120000000, EmployeesAndCustomerNames1739130000000, EmployeeExtraFields1739140000000, ContractBranch1739150000000, ContractGuarantorCustomer1739160000000],
       migrationsRun: true,
     }),
     ProductsModule,

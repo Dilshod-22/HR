@@ -70,7 +70,7 @@ export default function ContractsPage() {
               {list.data.map((c) => (
                 <tr key={c.id}>
                   <td>{c.customer ? getCustomerDisplayName(c.customer) : c.customerId}</td>
-                  <td>{c.guarantorName}{c.guarantorPhone ? ` (${c.guarantorPhone})` : ''}</td>
+                  <td>{c.guarantor ? getCustomerDisplayName(c.guarantor) : (c.guarantorName ?? '—')}</td>
                   <td>{c.termMonths} oy</td>
                   <td>{employeeName(c.employee)}</td>
                   <td>{c.branch || '—'}</td>

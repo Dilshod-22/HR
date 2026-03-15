@@ -10,12 +10,8 @@ export class CreateContractDto {
   @IsUUID()
   employeeId?: string;
 
-  @IsString()
-  guarantorName: string;
-
-  @IsOptional()
-  @IsString()
-  guarantorPhone?: string;
+  @IsUUID()
+  guarantorCustomerId: string;
 
   @IsInt()
   @Type(() => Number)

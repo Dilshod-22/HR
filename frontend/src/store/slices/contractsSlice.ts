@@ -55,7 +55,9 @@ const contractsSlice = createSlice({
       .addCase(fetchContracts.fulfilled, (s, a) => { s.list = a.payload; s.loading = false; })
       .addCase(fetchContracts.rejected, (s, a) => { s.error = a.error.message || null; s.loading = false; })
       .addCase(fetchContractById.fulfilled, (s, a) => { s.current = a.payload; })
-      .addCase(createContract.fulfilled, (s, a) => { s.current = a.payload; });
+      .addCase(createContract.pending, (s) => { s.loading = true; s.error = null; })
+      .addCase(createContract.fulfilled, (s, a) => { s.current = a.payload; s.loading = false; })
+      .addCase(createContract.rejected, (s, a) => { s.error = a.error.message || null; s.loading = false; });
   },
 });
 

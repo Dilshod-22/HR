@@ -126,8 +126,8 @@ export interface Contract {
   id: string;
   customerId: string;
   employeeId: string | null;
-  guarantorName: string;
-  guarantorPhone: string | null;
+  guarantorCustomerId: string | null;
+  guarantorName: string | null;
   termMonths: number;
   interestRateId: string;
   productTotal: number;
@@ -140,6 +140,7 @@ export interface Contract {
   updatedAt: string;
   customer?: Customer;
   employee?: Employee;
+  guarantor?: Customer;
   interestRate?: { id: string; termMonths: number; percentage: number; year: number };
   items?: ContractItem[];
   paymentSchedule?: { monthNumber: number; dueDate: string; amount: number; status: string }[];
@@ -154,8 +155,7 @@ export interface CreateContractItemDto {
 export interface CreateContractDto {
   customerId: string;
   employeeId?: string;
-  guarantorName: string;
-  guarantorPhone?: string;
+  guarantorCustomerId: string;
   termMonths: number;
   interestRateId: string;
   branch?: string;
