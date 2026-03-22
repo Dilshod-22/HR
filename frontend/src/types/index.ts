@@ -207,3 +207,14 @@ export interface CreateContractDto {
   branch?: string;
   items: CreateContractItemDto[];
 }
+
+/** Shartnoma yangilash (mahsulotlar/summalar + filial, status, javobgar, kafil) */
+export interface UpdateContractDto {
+  branch?: string | null;
+  status?: ContractStatus;
+  employeeId?: string | null;
+  guarantorCustomerId?: string;
+  termMonths?: number;
+  interestRateId?: string;
+  items?: CreateContractItemDto[];
+}

@@ -7,6 +7,7 @@ import Pagination from '../components/Pagination';
 import { ROUTES, receiptEditPath } from '../constants/routes';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '../constants/pagination';
 import { getCustomerDisplayName, PAYMENT_METHOD_LABELS } from '../types';
+import DataTable from '../components/DataTable';
 
 function employeeLabel(e: { fullName?: string | null; firstName?: string; lastName?: string; login?: string } | undefined) {
   if (!e) return '—';
@@ -36,51 +37,75 @@ export default function ReceiptsPage() {
 
       {!loading && list && (
         <>
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Sana</th>
-                <th>Raqam</th>
-                <th>Shartnoma</th>
-                <th>Mijoz</th>
-                <th>Oy</th>
-                <th>To‘lov turi</th>
-                <th>Summa</th>
-                <th>Filial</th>
-                <th>Javobgar</th>
-                <th>Harakat</th>
-              </tr>
-            </thead>
-            <tbody>
-              {list.data.map((r) => {
-                const c = r.contract;
-                const pm = r.paymentMethod as keyof typeof PAYMENT_METHOD_LABELS | null;
-                return (
-                  <tr key={r.id}>
-                    <td>{r.paidAt ? new Date(r.paidAt).toLocaleDateString('uz-UZ') : '—'}</td>
-                    <td>{r.receiptNumber}</td>
-                    <td className="text-muted">{c?.id?.slice(0, 8) ?? r.contractId.slice(0, 8)}…</td>
-                    <td>{c?.customer ? getCustomerDisplayName(c.customer) : '—'}</td>
-                    <td>{r.paymentSchedule ? `${r.paymentSchedule.monthNumber}-oy` : '—'}</td>
-                    <td>{pm && PAYMENT_METHOD_LABELS[pm] ? PAYMENT_METHOD_LABELS[pm] : '—'}</td>
-                    <td>{Number(r.amount).toLocaleString()} so‘m</td>
-                    <td>{c?.branch || '—'}</td>
-                    <td>{employeeLabel(c?.employee)}</td>
-                    <td>
-                      <Link
-                        to={receiptEditPath(r.id)}
-                        className="text-blue-600 inline-flex items-center gap-1"
-                        title="Tahrirlash"
-                      >
-                        <FiEdit2 size={18} />
-                      </Link>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-          {list.data.length === 0 && <p className="text-empty">Kvitansiya yo‘q.</p>}
+          <DataTable
+            data={list.data}
+            rowKey={(r) => r.id}
+            emptyMessage="Kvitansiya yo‘q."
+            columns={[
+              {
+                key: 'date',
+                header: 'Sana',
+                render: (r) => (r.paidAt ? new Date(r.paidAt).toLocaleDateString('uz-UZ') : '—'),
+              },
+              { key: 'num', header: 'Raqam', render: (r) => r.receiptNumber },
+              {
+                key: 'contract',
+                header: 'Shartnoma',
+                className: 'text-muted',
+                render: (r) => {
+                  const c = r.contract;
+                  return `${(c?.id ?? r.contractId).slice(0, 8)}…`;
+                },
+              },
+              {
+                key: 'customer',
+                header: 'Mijoz',
+                render: (r) =>
+                  r.contract?.customer ? getCustomerDisplayName(r.contract.customer) : '—',
+              },
+              {
+                key: 'month',
+                header: 'Oy',
+                render: (r) => (r.paymentSchedule ? `${r.paymentSchedule.monthNumber}-oy` : '—'),
+              },
+              {
+                key: 'pm',
+                header: 'To‘lov turi',
+                render: (r) => {
+                  const pm = r.paymentMethod as keyof typeof PAYMENT_METHOD_LABELS | null;
+                  return pm && PAYMENT_METHOD_LABELS[pm] ? PAYMENT_METHOD_LABELS[pm] : '—';
+                },
+              },
+              {
+                key: 'amount',
+                header: 'Summa',
+                render: (r) => `${Number(r.amount).toLocaleString()} so‘m`,
+              },
+              {
+                key: 'branch',
+                header: 'Filial',
+                render: (r) => r.contract?.branch || '—',
+              },
+              {
+                key: 'emp',
+                header: 'Javobgar',
+                render: (r) => employeeLabel(r.contract?.employee),
+              },
+              {
+                key: 'actions',
+                header: 'Harakat',
+                render: (r) => (
+                  <Link
+                    to={receiptEditPath(r.id)}
+                    className="text-blue-600 inline-flex items-center gap-1"
+                    title="Tahrirlash"
+                  >
+                    <FiEdit2 size={18} />
+                  </Link>
+                ),
+              },
+            ]}
+          />
           <Pagination page={list.page} totalPages={list.totalPages} onPageChange={setPage} />
         </>
       )}

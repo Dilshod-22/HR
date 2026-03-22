@@ -19,6 +19,7 @@ export const ROUTES = {
   RECEIPT_EDIT: '/receipts/:id/edit',
   CONTRACTS: '/contracts',
   CONTRACT_NEW: '/contracts/new',
+  CONTRACT_EDIT: '/contracts/:id/edit',
 } as const;
 
 export function productEditPath(id: string): string {
@@ -37,5 +38,9 @@ export function employeeEditPath(id: string): string {
 
 export function receiptEditPath(id: string): string {
   return `/receipts/${id}/edit`;
+}
+
+export function contractEditPath(id: string): string {
+  return `/contracts/${id}/edit`;
 }
 

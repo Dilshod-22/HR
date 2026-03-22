@@ -1,17 +1,36 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FiEdit2 } from 'react-icons/fi';
+import { MdDeleteOutline } from 'react-icons/md';
 import { useAppDispatch, useAppSelector } from '../store';
-import { fetchContracts } from '../store/slices/contractsSlice';
+import { fetchContracts, deleteContract } from '../store/slices/contractsSlice';
 import Pagination from '../components/Pagination';
-import { ROUTES } from '../constants/routes';
+import { ROUTES, contractEditPath } from '../constants/routes';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '../constants/pagination';
 import { getCustomerDisplayName } from '../types';
+import DataTable, { TableRowActions } from '../components/DataTable';
 
 export default function ContractsPage() {
   const dispatch = useAppDispatch();
   const { list, loading } = useAppSelector((s) => s.contracts);
   const [page, setPage] = useState(DEFAULT_PAGE);
   const [status, setStatus] = useState('');
+
+  const handleDelete = async (contractId: string) => {
+    if (!window.confirm("Haqiqatan ham shartnomani o'chirmoqchimisiz? Bog'liq kvitansiyalar ham o'chadi.")) return;
+    try {
+      await dispatch(deleteContract(contractId)).unwrap();
+      dispatch(
+        fetchContracts({
+          page,
+          limit: DEFAULT_PAGE_SIZE,
+          status: status || undefined,
+        })
+      );
+    } catch {
+      window.alert("Shartnomani o'chirib bo'lmadi.");
+    }
+  };
 
   useEffect(() => {
     dispatch(
@@ -53,39 +72,75 @@ export default function ContractsPage() {
       {loading && <p className="text-loading">Yuklanmoqda…</p>}
       {!loading && list && (
         <>
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Klient</th>
-                <th>Kafil</th>
-                <th>Muddati</th>
-                <th>Javobgar</th>
-                <th>Filial</th>
-                <th>Jami</th>
-                <th>Yaratilgan</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {list.data.map((c) => (
-                <tr key={c.id}>
-                  <td className={"text-[12px]"}>{c.customer ? getCustomerDisplayName(c.customer) : c.customerId}</td>
-                  <td className={"text-[12px]"}>{c.guarantor ? getCustomerDisplayName(c.guarantor) : (c.guarantorName ?? '—')}</td>
-                  <td className={"text-[12px]"}>{c.termMonths} oy</td>
-                  <td className={"text-[12px]"}>{employeeName(c.employee)}</td>
-                  <td className={"text-[12px]"}>{c.branch || '—'}</td>
-                  <td className={"text-[12px]"}>{Number(c.totalAmount).toLocaleString()} so‘m</td>
-                  <td className={"text-[12px]"}>{c.createdAt ? new Date(c.createdAt).toLocaleDateString('uz-UZ') : '—'}</td>
-                  <td>
-                    <span className={`status-badge status-${c.status}`}>{c.status}</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {list.data.length === 0 && (
-            <p className="text-empty">Shartnoma topilmadi.</p>
-          )}
+          <DataTable
+            data={list.data}
+            rowKey={(c) => c.id}
+            emptyMessage="Shartnoma topilmadi."
+            columns={[
+              {
+                key: 'client',
+                header: 'Klient',
+                className: 'text-[12px]',
+                render: (c) => (c.customer ? getCustomerDisplayName(c.customer) : c.customerId),
+              },
+              {
+                key: 'guarantor',
+                header: 'Kafil',
+                className: 'text-[12px]',
+                render: (c) =>
+                  c.guarantor ? getCustomerDisplayName(c.guarantor) : (c.guarantorName ?? '—'),
+              },
+              { key: 'term', header: 'Muddati', className: 'text-[12px]', render: (c) => `${c.termMonths} oy` },
+              {
+                key: 'emp',
+                header: 'Javobgar',
+                className: 'text-[12px]',
+                render: (c) => employeeName(c.employee),
+              },
+              { key: 'branch', header: 'Filial', className: 'text-[12px]', render: (c) => c.branch || '—' },
+              {
+                key: 'total',
+                header: 'Jami',
+                className: 'text-[12px]',
+                render: (c) => `${Number(c.totalAmount).toLocaleString()} so‘m`,
+              },
+              {
+                key: 'created',
+                header: 'Yaratilgan',
+                className: 'text-[12px]',
+                render: (c) =>
+                  c.createdAt ? new Date(c.createdAt).toLocaleDateString('uz-UZ') : '—',
+              },
+              {
+                key: 'status',
+                header: 'Status',
+                render: (c) => <span className={`status-badge status-${c.status}`}>{c.status}</span>,
+              },
+              {
+                key: 'actions',
+                header: 'Amallar',
+                render: (c) => (
+                  <TableRowActions>
+                    <Link
+                      className="text-blue-600 rounded-lg transition-colors"
+                      title="Tahrirlash"
+                      to={contractEditPath(c.id)}
+                    >
+                      <FiEdit2 size={18} />
+                    </Link>
+                    <button
+                      type="button"
+                      className="text-red-600 rounded-lg transition-colors bg-transparent border-0 cursor-pointer p-0"
+                      title="O'chirish"
+                      onClick={() => handleDelete(c.id)}
+                    >
+                      <MdDeleteOutline size={18} />
+                    </button>
+                  </TableRowActions>
+                ),
+              },
+            ]}
+          />
           <Pagination
             page={list.page}
             totalPages={list.totalPages}

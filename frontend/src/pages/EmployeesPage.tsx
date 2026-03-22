@@ -6,6 +6,9 @@ import Pagination from '../components/Pagination';
 import type { EmployeeFilters } from '../types';
 import { ROUTES, employeeEditPath } from '../constants/routes';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '../constants/pagination';
+import { FiEdit2 } from 'react-icons/fi';
+import { MdDeleteOutline } from 'react-icons/md';
+import DataTable, { TableRowActions } from '../components/DataTable';
 
 export default function EmployeesPage() {
   const dispatch = useAppDispatch();
@@ -75,40 +78,51 @@ export default function EmployeesPage() {
       {loading && <p className="text-loading">Yuklanmoqda…</p>}
       {!loading && list && (
         <>
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Ism / Familiya</th>
-                <th>Login</th>
-                <th>Telefon</th>
-                <th>PNFL</th>
-                <th>Tug‘ilgan sana</th>
-                <th>Passport</th>
-                <th>Yaratilgan</th>
-                <th>Amallar</th>
-              </tr>
-            </thead>
-            <tbody>
-              {list.data.map((e) => (
-                <tr key={e.id}>
-                  <td>{fullName(e)}</td>
-                  <td>{e.login}</td>
-                  <td>{e.phone || '—'}</td>
-                  <td>{e.pnfl || '—'}</td>
-                  <td>{e.birthDate || '—'}</td>
-                  <td>{[e.passportSeries, e.passportNumber].filter(Boolean).join(' ') || '—'}</td>
-                  <td>{e.createdAt ? new Date(e.createdAt).toLocaleDateString('uz-UZ') : '—'}</td>
-                  <td className="flex gap-2">
-                    <Link to={employeeEditPath(e.id)} className="link-action">✏️</Link>
-                    <button type="button" onClick={() => handleDelete(e.id)}>🗑️</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {list.data.length === 0 && (
-            <p className="text-empty">Hodim topilmadi.</p>
-          )}
+          <DataTable
+            data={list.data}
+            rowKey={(e) => e.id}
+            emptyMessage="Hodim topilmadi."
+            columns={[
+              { key: 'name', header: 'Ism / Familiya', render: (e) => fullName(e) },
+              { key: 'login', header: 'Login', render: (e) => e.login },
+              { key: 'phone', header: 'Telefon', render: (e) => e.phone || '—' },
+              { key: 'pnfl', header: 'PNFL', render: (e) => e.pnfl || '—' },
+              { key: 'birth', header: 'Tug‘ilgan sana', render: (e) => e.birthDate || '—' },
+              {
+                key: 'passport',
+                header: 'Passport',
+                render: (e) => [e.passportSeries, e.passportNumber].filter(Boolean).join(' ') || '—',
+              },
+              {
+                key: 'created',
+                header: 'Yaratilgan',
+                render: (e) => (e.createdAt ? new Date(e.createdAt).toLocaleDateString('uz-UZ') : '—'),
+              },
+              {
+                key: 'actions',
+                header: 'Amallar',
+                render: (e) => (
+                  <TableRowActions>
+                    <Link
+                      className="text-blue-600 rounded-lg transition-colors"
+                      title="Tahrirlash"
+                      to={employeeEditPath(e.id)}
+                    >
+                      <FiEdit2 size={18} />
+                    </Link>
+                    <button
+                      type="button"
+                      className="text-red-600 rounded-lg transition-colors bg-transparent border-0 cursor-pointer p-0"
+                      title="O'chirish"
+                      onClick={() => handleDelete(e.id)}
+                    >
+                      <MdDeleteOutline size={18} />
+                    </button>
+                  </TableRowActions>
+                ),
+              },
+            ]}
+          />
           <Pagination
             page={list.page}
             totalPages={list.totalPages}

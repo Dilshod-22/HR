@@ -8,6 +8,7 @@ import { getCustomerDisplayName } from '../types';
 import { ORDER_STATUS_LABELS } from '../constants/orders';
 import { ROUTES, orderEditPath } from '../constants/routes';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '../constants/pagination';
+import DataTable from '../components/DataTable';
 
 function statusClass(s: OrderStatus): string {
   return `status-badge status-${s}`;
@@ -86,37 +87,45 @@ export default function OrdersPage() {
       {loading && <p className="text-loading">Yuklanmoqda…</p>}
       {!loading && list && (
         <>
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Mijoz</th>
-                <th>Mahsulot</th>
-                <th>Miqdor</th>
-                <th>Status</th>
-                <th>Sana</th>
-                <th>Amallar</th>
-              </tr>
-            </thead>
-            <tbody>
-              {list.data.map((o) => (
-                <tr key={o.id}>
-                  <td>{o.customer ? getCustomerDisplayName(o.customer) : o.customerId}</td>
-                  <td>{o.product ? o.product.name : o.productId}</td>
-                  <td>{o.quantity}</td>
-                  <td>
-                    <span className={statusClass(o.status)}>{ORDER_STATUS_LABELS[o.status]}</span>
-                  </td>
-                  <td>{new Date(o.createdAt).toLocaleDateString('uz')}</td>
-                  <td>
-                    <Link to={orderEditPath(o.id)} className="link-action">Tahrirlash</Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {list.data.length === 0 && (
-            <p className="text-empty">Buyurtma topilmadi.</p>
-          )}
+          <DataTable
+            data={list.data}
+            rowKey={(o) => o.id}
+            emptyMessage="Buyurtma topilmadi."
+            columns={[
+              {
+                key: 'customer',
+                header: 'Mijoz',
+                render: (o) => (o.customer ? getCustomerDisplayName(o.customer) : o.customerId),
+              },
+              {
+                key: 'product',
+                header: 'Mahsulot',
+                render: (o) => (o.product ? o.product.name : o.productId),
+              },
+              { key: 'qty', header: 'Miqdor', render: (o) => o.quantity },
+              {
+                key: 'status',
+                header: 'Status',
+                render: (o) => (
+                  <span className={statusClass(o.status)}>{ORDER_STATUS_LABELS[o.status]}</span>
+                ),
+              },
+              {
+                key: 'date',
+                header: 'Sana',
+                render: (o) => new Date(o.createdAt).toLocaleDateString('uz'),
+              },
+              {
+                key: 'actions',
+                header: 'Amallar',
+                render: (o) => (
+                  <Link to={orderEditPath(o.id)} className="link-action">
+                    Tahrirlash
+                  </Link>
+                ),
+              },
+            ]}
+          />
           <Pagination
             page={list.page}
             totalPages={list.totalPages}

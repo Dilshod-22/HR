@@ -43,6 +43,7 @@ const router = createBrowserRouter([
       { path: 'receipts/:id/edit', element: <ReceiptsFormPage /> },
       { path: 'contracts', element: <ContractsPage /> },
       { path: 'contracts/new', element: <ContractFormPage /> },
+      { path: 'contracts/:id/edit', element: <ContractFormPage /> },
     ],
   },
   { path: '*', element: <Navigate to={ROUTES.HOME} replace /> },

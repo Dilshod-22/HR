@@ -7,6 +7,8 @@ import Pagination from '../components/Pagination';
 import type { ProductFilters } from '../types';
 import { ROUTES, productEditPath } from '../constants/routes';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '../constants/pagination';
+import { FiEdit2 } from 'react-icons/fi';
+import DataTable from '../components/DataTable';
 
 export default function ProductsPage() {
   const dispatch = useAppDispatch();
@@ -79,51 +81,49 @@ export default function ProductsPage() {
       {loading && <p className="text-loading">Yuklanmoqda…</p>}
       {!loading && list && (
         <>
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Rasm</th>
-                <th>Nom</th>
-                <th>Narx</th>
-                <th>Amallar</th>
-              </tr>
-            </thead>
-            <tbody>
-              {list.data.map((p) => (
-                <tr key={p.id}>
-                  <td>
-                    {p.imageUrl ? (
-                      <img src={p.imageUrl} alt="" className="td-img" />
-                    ) : (
-                      <span className="text-muted">—</span>
-                    )}
-                  </td>
-                  <td>{p.name}</td>
-                  <td>{Number(p.price).toLocaleString()} so‘m</td>
-                  <td>
-                    <div className="flex items-center gap-3 flex-wrap">
-                      <Link to={productEditPath(p.id)} className="link-action">
-                        Tahrirlash
-                      </Link>
-                      <button
-                        type="button"
-                        className="inline-flex items-center gap-1 text-red-600 hover:opacity-80 bg-transparent border-0 cursor-pointer p-0"
-                        title="O‘chirish"
-                        disabled={deletingId === p.id}
-                        onClick={() => handleDelete(p.id, p.name)}
-                      >
-                        <MdDeleteOutline size={20} />
-                        <span className="text-sm">O‘chirish</span>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {list.data.length === 0 && (
-            <p className="text-empty">Mahsulot topilmadi.</p>
-          )}
+          <DataTable
+            data={list.data}
+            rowKey={(p) => p.id}
+            emptyMessage="Mahsulot topilmadi."
+            columns={[
+              {
+                key: 'image',
+                header: 'Rasm',
+                render: (p) =>
+                  p.imageUrl ? (
+                    <img src={p.imageUrl} alt="" className="td-img" />
+                  ) : (
+                    <span className="text-muted">—</span>
+                  ),
+              },
+              { key: 'name', header: 'Nom', render: (p) => p.name },
+              {
+                key: 'price',
+                header: 'Narx',
+                render: (p) => `${Number(p.price).toLocaleString()} so‘m`,
+              },
+              {
+                key: 'actions',
+                header: 'Amallar',
+                render: (p) => (
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <Link to={productEditPath(p.id)} className="link-action">
+                      <FiEdit2 size={18} />
+                    </Link>
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1 text-red-600 hover:opacity-80 bg-transparent border-0 cursor-pointer p-0"
+                      title="O‘chirish"
+                      disabled={deletingId === p.id}
+                      onClick={() => handleDelete(p.id, p.name)}
+                    >
+                      <MdDeleteOutline size={20} />
+                    </button>
+                  </div>
+                ),
+              },
+            ]}
+          />
           <Pagination
             page={list.page}
             totalPages={list.totalPages}

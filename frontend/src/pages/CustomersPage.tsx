@@ -6,8 +6,9 @@ import Pagination from '../components/Pagination';
 import type { CustomerFilters } from '../types';
 import { ROUTES, customerEditPath } from '../constants/routes';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '../constants/pagination';
-import {FiEdit2} from "react-icons/fi";
-import {MdDeleteOutline} from "react-icons/md";
+import { FiEdit2 } from 'react-icons/fi';
+import { MdDeleteOutline } from 'react-icons/md';
+import DataTable, { TableRowActions } from '../components/DataTable';
 
 export default function CustomersPage() {
   const dispatch = useAppDispatch();
@@ -23,7 +24,6 @@ export default function CustomersPage() {
 
   useEffect(() => {
     dispatch(fetchCustomers(filters));
-    console.log(list);
   }, [dispatch, filters]);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -90,35 +90,43 @@ export default function CustomersPage() {
       {loading && <p className="text-loading">Yuklanmoqda…</p>}
       {!loading && list && (
         <>
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Ism / Familiya</th>
-                <th>Tug'ilgan sana</th>
-                <th>Telefon</th>
-                <th>Amallar</th>
-              </tr>
-            </thead>
-            <tbody>
-              {list.data.map((c) => (
-                <tr key={c.id}>
-                  <td>{c.fullName || `${c.firstName} ${c.lastName}`.trim() || '—'}</td>
-                  <td>{c.birthDate || '—'}</td>
-                  <td>{c.phone || '—'}</td>
-                  <td className={"flex gap-2"}>
-                    <div className="flex item-center justify-center gap-3 py-1">
-                      <Link className="text-blue-600 rounded-lg transition-colors" title="Tahrirlash" to={customerEditPath(c.id)}><FiEdit2 size={18}/></Link>
-                      <button className="text-red-600 rounded-lg transition-colors" title="O'chirish" onClick={()=>deleteHandler(c.id)}><MdDeleteOutline size={18}/></button>
-                    </div>
-                  </td>
-
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {list.data.length === 0 && (
-            <p className="text-empty">Mijoz topilmadi.</p>
-          )}
+          <DataTable
+            data={list.data}
+            rowKey={(c) => c.id}
+            emptyMessage="Mijoz topilmadi."
+            columns={[
+              {
+                key: 'name',
+                header: 'Ism / Familiya',
+                render: (c) => c.fullName || `${c.firstName} ${c.lastName}`.trim() || '—',
+              },
+              { key: 'birth', header: "Tug'ilgan sana", render: (c) => c.birthDate || '—' },
+              { key: 'phone', header: 'Telefon', render: (c) => c.phone || '—' },
+              {
+                key: 'actions',
+                header: 'Amallar',
+                render: (c) => (
+                  <TableRowActions>
+                    <Link
+                      className="text-blue-600 rounded-lg transition-colors"
+                      title="Tahrirlash"
+                      to={customerEditPath(c.id)}
+                    >
+                      <FiEdit2 size={18} />
+                    </Link>
+                    <button
+                      type="button"
+                      className="text-red-600 rounded-lg transition-colors bg-transparent border-0 cursor-pointer p-0"
+                      title="O'chirish"
+                      onClick={() => deleteHandler(c.id)}
+                    >
+                      <MdDeleteOutline size={18} />
+                    </button>
+                  </TableRowActions>
+                ),
+              },
+            ]}
+          />
           <Pagination
             page={list.page}
             totalPages={list.totalPages}
