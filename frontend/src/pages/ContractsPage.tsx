@@ -69,13 +69,13 @@ export default function ContractsPage() {
             <tbody>
               {list.data.map((c) => (
                 <tr key={c.id}>
-                  <td>{c.customer ? getCustomerDisplayName(c.customer) : c.customerId}</td>
-                  <td>{c.guarantor ? getCustomerDisplayName(c.guarantor) : (c.guarantorName ?? '—')}</td>
-                  <td>{c.termMonths} oy</td>
-                  <td>{employeeName(c.employee)}</td>
-                  <td>{c.branch || '—'}</td>
-                  <td>{Number(c.totalAmount).toLocaleString()} so‘m</td>
-                  <td>{c.createdAt ? new Date(c.createdAt).toLocaleDateString('uz-UZ') : '—'}</td>
+                  <td className={"text-[12px]"}>{c.customer ? getCustomerDisplayName(c.customer) : c.customerId}</td>
+                  <td className={"text-[12px]"}>{c.guarantor ? getCustomerDisplayName(c.guarantor) : (c.guarantorName ?? '—')}</td>
+                  <td className={"text-[12px]"}>{c.termMonths} oy</td>
+                  <td className={"text-[12px]"}>{employeeName(c.employee)}</td>
+                  <td className={"text-[12px]"}>{c.branch || '—'}</td>
+                  <td className={"text-[12px]"}>{Number(c.totalAmount).toLocaleString()} so‘m</td>
+                  <td className={"text-[12px]"}>{c.createdAt ? new Date(c.createdAt).toLocaleDateString('uz-UZ') : '—'}</td>
                   <td>
                     <span className={`status-badge status-${c.status}`}>{c.status}</span>
                   </td>

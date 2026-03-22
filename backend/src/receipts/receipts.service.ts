@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Receipt } from './receipt.entity';
 import { PaymentSchedule, ScheduleStatus } from '../contracts/payment-schedule.entity';
+import { CreateReceiptDto } from './dto/create-receipt.dto';
+import { UpdateReceiptDto } from './dto/update-receipt.dto';
 
 @Injectable()
 export class ReceiptsService {
@@ -13,7 +15,8 @@ export class ReceiptsService {
     private readonly scheduleRepo: Repository<PaymentSchedule>,
   ) {}
 
-  async create(contractId: string, paymentScheduleId: string, amount: number): Promise<Receipt> {
+  async create(dto: CreateReceiptDto): Promise<Receipt> {
+    const { contractId, paymentScheduleId, amount, paymentMethod, notes } = dto;
     const schedule = await this.scheduleRepo.findOne({
       where: { id: paymentScheduleId, contractId },
       relations: ['contract'],
@@ -32,6 +35,8 @@ export class ReceiptsService {
       amount,
       receiptNumber,
       paidAt,
+      paymentMethod: paymentMethod ?? null,
+      notes: notes ?? null,
     });
     await this.receiptRepo.save(receipt);
 
@@ -58,6 +63,8 @@ export class ReceiptsService {
     const qb = this.receiptRepo
       .createQueryBuilder('receipt')
       .leftJoinAndSelect('receipt.contract', 'contract')
+      .leftJoinAndSelect('contract.customer', 'customer')
+      .leftJoinAndSelect('contract.employee', 'employee')
       .leftJoinAndSelect('receipt.paymentSchedule', 'paymentSchedule')
       .orderBy('receipt.paidAt', 'DESC')
       .skip(skip)
@@ -78,9 +85,18 @@ export class ReceiptsService {
   async findOne(id: string): Promise<Receipt> {
     const receipt = await this.receiptRepo.findOne({
       where: { id },
-      relations: ['contract', 'contract.customer', 'paymentSchedule'],
+      relations: ['contract', 'contract.customer', 'contract.employee', 'paymentSchedule'],
     });
     if (!receipt) throw new NotFoundException('Kvitansiya topilmadi');
     return receipt;
+  }
+
+  async update(id: string, dto: UpdateReceiptDto): Promise<Receipt> {
+    const receipt = await this.receiptRepo.findOne({ where: { id } });
+    if (!receipt) throw new NotFoundException('Kvitansiya topilmadi');
+    if (dto.paymentMethod !== undefined) receipt.paymentMethod = dto.paymentMethod;
+    if (dto.notes !== undefined) receipt.notes = dto.notes;
+    await this.receiptRepo.save(receipt);
+    return this.findOne(id);
   }
 }

@@ -143,8 +143,54 @@ export interface Contract {
   guarantor?: Customer;
   interestRate?: { id: string; termMonths: number; percentage: number; year: number };
   items?: ContractItem[];
-  paymentSchedule?: { monthNumber: number; dueDate: string; amount: number; status: string }[];
+  paymentSchedule?: {
+    id: string;
+    monthNumber: number;
+    dueDate: string;
+    amount: number;
+    status: 'pending' | 'paid';
+  }[];
 }
+
+/** Kvitansiya (to‘lov) */
+export interface Receipt {
+  id: string;
+  contractId: string;
+  paymentScheduleId: string;
+  amount: number;
+  receiptNumber: string;
+  paidAt: string;
+  paymentMethod: string | null;
+  notes: string | null;
+  createdAt: string;
+  contract?: Contract;
+  paymentSchedule?: {
+    id: string;
+    monthNumber: number;
+    dueDate: string;
+    amount: number;
+    status: string;
+  };
+}
+
+export interface CreateReceiptDto {
+  contractId: string;
+  paymentScheduleId: string;
+  amount: number;
+  paymentMethod?: 'cash' | 'card' | 'bank';
+  notes?: string;
+}
+
+export interface UpdateReceiptDto {
+  paymentMethod?: 'cash' | 'card' | 'bank' | null;
+  notes?: string | null;
+}
+
+export const PAYMENT_METHOD_LABELS: Record<'cash' | 'card' | 'bank', string> = {
+  cash: 'Naqd',
+  card: 'Karta',
+  bank: 'Bank o‘tkazmasi',
+};
 
 export interface CreateContractItemDto {
   productId: string;

@@ -87,7 +87,13 @@ const productsSlice = createSlice({
       .addCase(fetchProductById.fulfilled, (s, a) => { s.current = a.payload; })
       .addCase(createProduct.fulfilled, (s) => { s.current = null; })
       .addCase(updateProduct.fulfilled, (s, a) => { s.current = a.payload; })
-      .addCase(deleteProduct.fulfilled, (s) => { s.current = null; });
+      .addCase(deleteProduct.pending, (s) => { s.error = null; })
+      .addCase(deleteProduct.fulfilled, (s, a) => {
+        s.current = s.current?.id === a.payload ? null : s.current;
+      })
+      .addCase(deleteProduct.rejected, (s, a) => {
+        s.error = a.error.message || 'O‘chirishda xato';
+      });
   },
 });
 

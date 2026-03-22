@@ -29,6 +29,12 @@ export class Receipt {
   @Column({ name: 'paid_at', type: 'timestamp' })
   paidAt: Date;
 
+  @Column({ name: 'payment_method', type: 'varchar', nullable: true })
+  paymentMethod: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  notes: string | null;
+
   @CreateDateColumn()
   createdAt: Date;
 

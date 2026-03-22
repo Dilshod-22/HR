@@ -6,6 +6,8 @@ import Pagination from '../components/Pagination';
 import type { CustomerFilters } from '../types';
 import { ROUTES, customerEditPath } from '../constants/routes';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '../constants/pagination';
+import {FiEdit2} from "react-icons/fi";
+import {MdDeleteOutline} from "react-icons/md";
 
 export default function CustomersPage() {
   const dispatch = useAppDispatch();
@@ -104,8 +106,10 @@ export default function CustomersPage() {
                   <td>{c.birthDate || '—'}</td>
                   <td>{c.phone || '—'}</td>
                   <td className={"flex gap-2"}>
-                    <Link to={customerEditPath(c.id)} className="link-action">✏️</Link>
-                    <button onClick={()=>deleteHandler(c.id)} >🗑️</button>
+                    <div className="flex item-center justify-center gap-3 py-1">
+                      <Link className="text-blue-600 rounded-lg transition-colors" title="Tahrirlash" to={customerEditPath(c.id)}><FiEdit2 size={18}/></Link>
+                      <button className="text-red-600 rounded-lg transition-colors" title="O'chirish" onClick={()=>deleteHandler(c.id)}><MdDeleteOutline size={18}/></button>
+                    </div>
                   </td>
 
                 </tr>

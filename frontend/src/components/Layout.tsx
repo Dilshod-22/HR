@@ -103,14 +103,14 @@ export default function Layout() {
                 <span className="sidebar-link-dot" aria-hidden>•</span>
                 Kvitansiyalar
               </NavLink>
-              <NavLink to={ROUTES.CONTRACT_NEW} className={sidebarLinkClassName} onClick={closeMenus}>
+              <NavLink to={ROUTES.CONTRACTS} className={sidebarLinkClassName} onClick={closeMenus}>
                 <span className="sidebar-link-dot" aria-hidden>•</span>
                 Shartnoma
               </NavLink>
-              <NavLink to={ROUTES.CONTRACTS} className={sidebarLinkClassName} end onClick={closeMenus}>
-                <span className="sidebar-link-dot" aria-hidden>•</span>
-                To‘lov grafigi
-              </NavLink>
+              {/*<NavLink to={ROUTES.CONTRACTS} className={sidebarLinkClassName} end onClick={closeMenus}>*/}
+              {/*  <span className="sidebar-link-dot" aria-hidden>•</span>*/}
+              {/*  To‘lov grafigi*/}
+              {/*</NavLink>*/}
             </div>
           </div>
         </nav>

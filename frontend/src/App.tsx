@@ -40,6 +40,7 @@ const router = createBrowserRouter([
       { path: 'interest-rates', element: <InterestRatesPage /> },
       { path: 'receipts', element: <ReceiptsPage /> },
       { path: 'receipts/new', element: <ReceiptsFormPage /> },
+      { path: 'receipts/:id/edit', element: <ReceiptsFormPage /> },
       { path: 'contracts', element: <ContractsPage /> },
       { path: 'contracts/new', element: <ContractFormPage /> },
     ],

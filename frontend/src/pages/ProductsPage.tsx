@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { MdDeleteOutline } from 'react-icons/md';
 import { useAppDispatch, useAppSelector } from '../store';
-import { fetchProducts } from '../store/slices/productsSlice';
+import { fetchProducts, deleteProduct } from '../store/slices/productsSlice';
 import Pagination from '../components/Pagination';
 import type { ProductFilters } from '../types';
 import { ROUTES, productEditPath } from '../constants/routes';
@@ -18,10 +19,24 @@ export default function ProductsPage() {
     sortOrder: 'DESC',
   });
   const [searchInput, setSearchInput] = useState('');
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     dispatch(fetchProducts(filters));
   }, [dispatch, filters]);
+
+  const handleDelete = async (id: string, name: string) => {
+    if (!window.confirm(`«${name}» mahsulotini o‘chirishni tasdiqlaysizmi?`)) return;
+    setDeletingId(id);
+    try {
+      await dispatch(deleteProduct(id)).unwrap();
+      dispatch(fetchProducts(filters));
+    } catch {
+      window.alert('Mahsulotni o‘chirib bo‘lmadi. Boshqa joyda ishlatilayotgan bo‘lishi mumkin.');
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,7 +101,21 @@ export default function ProductsPage() {
                   <td>{p.name}</td>
                   <td>{Number(p.price).toLocaleString()} so‘m</td>
                   <td>
-                    <Link to={productEditPath(p.id)} className="link-action">Tahrirlash</Link>
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <Link to={productEditPath(p.id)} className="link-action">
+                        Tahrirlash
+                      </Link>
+                      <button
+                        type="button"
+                        className="inline-flex items-center gap-1 text-red-600 hover:opacity-80 bg-transparent border-0 cursor-pointer p-0"
+                        title="O‘chirish"
+                        disabled={deletingId === p.id}
+                        onClick={() => handleDelete(p.id, p.name)}
+                      >
+                        <MdDeleteOutline size={20} />
+                        <span className="text-sm">O‘chirish</span>
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
