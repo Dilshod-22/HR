@@ -97,6 +97,8 @@ export default function ProductsPage() {
                   ),
               },
               { key: 'name', header: 'Nom', render: (p) => p.name },
+              { key: 'group', header: 'Guruh', render: (p) => p.group?.name || '—' },
+              { key: 'stock', header: 'Qoldiq', render: (p) => p.stockQty ?? 0 },
               {
                 key: 'price',
                 header: 'Narx',

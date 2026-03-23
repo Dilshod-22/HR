@@ -3,6 +3,10 @@ export interface Product {
   name: string;
   description: string | null;
   price: number;
+  purchasePrice: number;
+  stockQty: number;
+  groupId: string | null;
+  group?: { id: string; name: string } | null;
   imageUrl: string | null;
   imageKitId: string | null;
   createdAt: string;
@@ -217,4 +221,71 @@ export interface UpdateContractDto {
   termMonths?: number;
   interestRateId?: string;
   items?: CreateContractItemDto[];
+}
+
+export interface ProductGroup {
+  id: string;
+  name: string;
+  description: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Counterparty {
+  id: string;
+  name: string;
+  phone: string | null;
+  tin: string | null;
+  address: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface StockReceiptItem {
+  id?: string;
+  productId: string;
+  product?: Product;
+  quantity: number;
+  purchasePrice: number;
+  salePrice: number;
+  lineTotal?: number;
+}
+
+export interface StockReceipt {
+  id: string;
+  counterpartyId: string;
+  employeeId: string | null;
+  receiptDate: string;
+  note: string | null;
+  totalAmount: number;
+  createdAt: string;
+  updatedAt: string;
+  counterparty?: Counterparty;
+  employee?: Employee;
+  items?: StockReceiptItem[];
+}
+
+export interface CreateStockReceiptDto {
+  counterpartyId: string;
+  employeeId?: string;
+  receiptDate: string;
+  note?: string;
+  items: Array<{
+    productId: string;
+    quantity: number;
+    purchasePrice: number;
+    salePrice?: number;
+  }>;
+}
+
+export interface StockReportRow {
+  productId: string;
+  productName: string;
+  groupId: string | null;
+  groupName: string | null;
+  stockQty: number;
+  currentPurchasePrice: number;
+  currentSalePrice: number;
+  incomingQtyInPeriod: number;
+  incomingAmountInPeriod: number;
 }

@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsNumber, Min } from 'class-validator';
+import { IsString, IsOptional, IsNumber, Min, IsUUID } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateProductDto {
@@ -13,4 +13,8 @@ export class CreateProductDto {
   @IsNumber()
   @Min(0)
   price: number;
+
+  @IsOptional()
+  @IsUUID()
+  groupId?: string;
 }

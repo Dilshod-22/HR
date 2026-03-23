@@ -5,6 +5,9 @@ import ordersReducer from './slices/ordersSlice';
 import employeesReducer from './slices/employeesSlice';
 import contractsReducer from './slices/contractsSlice';
 import receiptsReducer from './slices/receiptsSlice';
+import counterpartiesReducer from './slices/counterpartiesSlice';
+import productGroupsReducer from './slices/productGroupsSlice';
+import stockReducer from './slices/stockSlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +17,9 @@ export const store = configureStore({
     employees: employeesReducer,
     contracts: contractsReducer,
     receipts: receiptsReducer,
+    counterparties: counterpartiesReducer,
+    productGroups: productGroupsReducer,
+    stock: stockReducer,
   },
 });
 

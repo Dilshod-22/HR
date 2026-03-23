@@ -13,4 +13,8 @@ export class FilterProductDto extends PaginationDto {
   @IsOptional()
   @IsString()
   sortOrder?: 'ASC' | 'DESC' = 'DESC';
+
+  @IsOptional()
+  @IsString()
+  groupId?: string;
 }

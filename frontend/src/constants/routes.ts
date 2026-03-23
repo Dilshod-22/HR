@@ -20,6 +20,10 @@ export const ROUTES = {
   CONTRACTS: '/contracts',
   CONTRACT_NEW: '/contracts/new',
   CONTRACT_EDIT: '/contracts/:id/edit',
+  COUNTERPARTIES: '/counterparties',
+  PRODUCT_GROUPS: '/product-groups',
+  STOCK_RECEIPTS: '/stock-receipts',
+  STOCK_REPORT: '/stock-report',
 } as const;
 
 export function productEditPath(id: string): string {

@@ -9,6 +9,9 @@ import { ContractsModule } from './contracts/contracts.module';
 import { ReceiptsModule } from './receipts/receipts.module';
 import { EmployeesModule } from './employees/employees.module';
 import { AuthModule } from './auth/auth.module';
+import { CounterpartiesModule } from './counterparties/counterparties.module';
+import { ProductGroupsModule } from './product-groups/product-groups.module';
+import { StockReceiptsModule } from './stock-receipts/stock-receipts.module';
 import { InitialSchema1739112000000 } from './migrations/1739112000000-InitialSchema';
 import { ContractsAndCustomers1739120000000 } from './migrations/1739120000000-ContractsAndCustomers';
 import { EmployeesAndCustomerNames1739130000000 } from './migrations/1739130000000-EmployeesAndCustomerNames';
@@ -16,6 +19,7 @@ import { EmployeeExtraFields1739140000000 } from './migrations/1739140000000-Emp
 import { ContractBranch1739150000000 } from './migrations/1739150000000-ContractBranch';
 import { ContractGuarantorCustomer1739160000000 } from './migrations/1739160000000-ContractGuarantorCustomer';
 import { ReceiptPaymentMethodNotes1739170000000 } from './migrations/1739170000000-ReceiptPaymentMethodNotes';
+import { StockAndGroups1739180000000 } from './migrations/1739180000000-StockAndGroups';
 
 @Module({
   imports: [
@@ -29,7 +33,7 @@ import { ReceiptPaymentMethodNotes1739170000000 } from './migrations/17391700000
       database: process.env.DB_DATABASE || 'railway',
       autoLoadEntities: true,
       synchronize: false,
-      migrations: [InitialSchema1739112000000, ContractsAndCustomers1739120000000, EmployeesAndCustomerNames1739130000000, EmployeeExtraFields1739140000000, ContractBranch1739150000000, ContractGuarantorCustomer1739160000000, ReceiptPaymentMethodNotes1739170000000],
+      migrations: [InitialSchema1739112000000, ContractsAndCustomers1739120000000, EmployeesAndCustomerNames1739130000000, EmployeeExtraFields1739140000000, ContractBranch1739150000000, ContractGuarantorCustomer1739160000000, ReceiptPaymentMethodNotes1739170000000, StockAndGroups1739180000000],
       migrationsRun: true,
     }),
     ProductsModule,
@@ -40,6 +44,9 @@ import { ReceiptPaymentMethodNotes1739170000000 } from './migrations/17391700000
     ReceiptsModule,
     EmployeesModule,
     AuthModule,
+    CounterpartiesModule,
+    ProductGroupsModule,
+    StockReceiptsModule,
   ],
 })
 export class AppModule {}

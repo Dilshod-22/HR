@@ -7,6 +7,7 @@ import {
   updateProduct,
   clearCurrent,
 } from '../store/slices/productsSlice';
+import { fetchProductGroups } from '../store/slices/productGroupsSlice';
 import { ROUTES } from '../constants/routes';
 
 export default function ProductFormPage() {
@@ -14,16 +15,19 @@ export default function ProductFormPage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { current, loading } = useAppSelector((s) => s.products);
+  const { list: productGroups } = useAppSelector((s) => s.productGroups);
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
+  const [groupId, setGroupId] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const isEdit = Boolean(id);
 
   useEffect(() => {
+    dispatch(fetchProductGroups());
     if (id) dispatch(fetchProductById(id));
     return () => { dispatch(clearCurrent()); };
   }, [id, dispatch]);
@@ -33,6 +37,7 @@ export default function ProductFormPage() {
       setName(current.name);
       setDescription(current.description || '');
       setPrice(String(current.price));
+      setGroupId(current.groupId || '');
       setImagePreview(current.imageUrl || null);
     }
   }, [current]);
@@ -53,12 +58,12 @@ export default function ProductFormPage() {
     if (isEdit && id) {
       await dispatch(updateProduct({
         id,
-        body: { name: name.trim(), description: description.trim() || undefined, price: numPrice },
+        body: { name: name.trim(), description: description.trim() || undefined, price: numPrice, groupId: groupId || undefined },
         image: image ?? undefined,
       }));
     } else {
       await dispatch(createProduct({
-        body: { name: name.trim(), description: description.trim() || undefined, price: numPrice },
+        body: { name: name.trim(), description: description.trim() || undefined, price: numPrice, groupId: groupId || undefined },
         image: image ?? undefined,
       }));
     }
@@ -86,6 +91,15 @@ export default function ProductFormPage() {
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
           />
+        </label>
+        <label className="form-label">
+          Guruh
+          <select className="form-select" value={groupId} onChange={(e) => setGroupId(e.target.value)}>
+            <option value="">Tanlanmagan</option>
+            {productGroups.map((g) => (
+              <option key={g.id} value={g.id}>{g.name}</option>
+            ))}
+          </select>
         </label>
         <label className="form-label">
           Narx (so‘m) *

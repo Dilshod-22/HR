@@ -34,11 +34,12 @@ export const fetchProductById = createAsyncThunk(
 
 export const createProduct = createAsyncThunk(
   'products/create',
-  async (payload: { body: { name: string; description?: string; price: number }; image?: File }) => {
+  async (payload: { body: { name: string; description?: string; price: number; groupId?: string }; image?: File }) => {
     const form = new FormData();
     form.append('name', payload.body.name);
     form.append('price', String(payload.body.price));
     if (payload.body.description) form.append('description', payload.body.description);
+    if (payload.body.groupId) form.append('groupId', payload.body.groupId);
     if (payload.image) form.append('image', payload.image);
     const { data } = await apiForm('/products', form, 'post');
     return data as Product;
@@ -49,13 +50,14 @@ export const updateProduct = createAsyncThunk(
   'products/update',
   async (payload: {
     id: string;
-    body: { name?: string; description?: string; price?: number };
+    body: { name?: string; description?: string; price?: number; groupId?: string };
     image?: File;
   }) => {
     const form = new FormData();
     if (payload.body.name !== undefined) form.append('name', payload.body.name);
     if (payload.body.price !== undefined) form.append('price', String(payload.body.price));
     if (payload.body.description !== undefined) form.append('description', payload.body.description);
+    if (payload.body.groupId !== undefined) form.append('groupId', payload.body.groupId);
     if (payload.image) form.append('image', payload.image);
     const { data } = await apiForm(`/products/${payload.id}`, form, 'patch');
     return data as Product;

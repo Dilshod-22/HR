@@ -5,8 +5,15 @@ import { useAuth } from '../contexts/AuthContext';
 import { ROUTES } from '../constants/routes';
 import './Layout.css';
 
-const SPRAVOCHNIK_PATHS = [ROUTES.CUSTOMERS, ROUTES.PRODUCTS, ROUTES.EMPLOYEES, ROUTES.INTEREST_RATES];
-const KASSA_PATHS = [ROUTES.RECEIPTS, ROUTES.CONTRACTS, ROUTES.CONTRACT_NEW];
+const SPRAVOCHNIK_PATHS = [
+  ROUTES.CUSTOMERS,
+  ROUTES.PRODUCTS,
+  ROUTES.EMPLOYEES,
+  ROUTES.INTEREST_RATES,
+  ROUTES.COUNTERPARTIES,
+  ROUTES.PRODUCT_GROUPS,
+];
+const KASSA_PATHS = [ROUTES.RECEIPTS, ROUTES.CONTRACTS, ROUTES.CONTRACT_NEW, ROUTES.STOCK_RECEIPTS, ROUTES.STOCK_REPORT];
 
 const sidebarLinkClassName = ({ isActive }: { isActive: boolean }) =>
   `sidebar-link ${isActive ? 'active' : ''}`;
@@ -85,6 +92,14 @@ export default function Layout() {
                 <span className="sidebar-link-dot" aria-hidden>•</span>
                 Ustanovka foiz
               </NavLink>
+              <NavLink to={ROUTES.COUNTERPARTIES} className={sidebarLinkClassName} onClick={closeMenus}>
+                <span className="sidebar-link-dot" aria-hidden>•</span>
+                Kontragent
+              </NavLink>
+              <NavLink to={ROUTES.PRODUCT_GROUPS} className={sidebarLinkClassName} onClick={closeMenus}>
+                <span className="sidebar-link-dot" aria-hidden>•</span>
+                Mahsulot guruhi
+              </NavLink>
             </div>
           </div>
           <div className={`sidebar-dropdown ${kassaOpen ? 'is-open' : ''} ${isKassaActive ? 'has-active' : ''}`}>
@@ -106,6 +121,14 @@ export default function Layout() {
               <NavLink to={ROUTES.CONTRACTS} className={sidebarLinkClassName} onClick={closeMenus}>
                 <span className="sidebar-link-dot" aria-hidden>•</span>
                 Shartnoma
+              </NavLink>
+              <NavLink to={ROUTES.STOCK_RECEIPTS} className={sidebarLinkClassName} onClick={closeMenus}>
+                <span className="sidebar-link-dot" aria-hidden>•</span>
+                Prihod
+              </NavLink>
+              <NavLink to={ROUTES.STOCK_REPORT} className={sidebarLinkClassName} onClick={closeMenus}>
+                <span className="sidebar-link-dot" aria-hidden>•</span>
+                Sklad report
               </NavLink>
               {/*<NavLink to={ROUTES.CONTRACTS} className={sidebarLinkClassName} end onClick={closeMenus}>*/}
               {/*  <span className="sidebar-link-dot" aria-hidden>•</span>*/}

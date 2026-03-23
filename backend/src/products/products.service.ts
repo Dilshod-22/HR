@@ -31,16 +31,22 @@ export class ProductsService {
   }
 
   async findAll(filters: FilterProductDto): Promise<PaginatedResult<Product>> {
-    const { page = 1, limit = 10, search, sortBy = 'createdAt', sortOrder = 'DESC' } = filters;
+    const { page = 1, limit = 10, search, sortBy = 'createdAt', sortOrder = 'DESC', groupId } = filters;
     const skip = (page - 1) * limit;
 
-    const qb = this.productRepo.createQueryBuilder('product');
+    const qb = this.productRepo
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.group', 'group');
 
     if (search?.trim()) {
       qb.andWhere(
         '(product.name ILIKE :search OR product.description ILIKE :search)',
         { search: `%${search.trim()}%` },
       );
+    }
+
+    if (groupId) {
+      qb.andWhere('product.groupId = :groupId', { groupId });
     }
 
     qb.orderBy(`product.${sortBy}`, sortOrder)
@@ -59,7 +65,7 @@ export class ProductsService {
   }
 
   async findOne(id: string): Promise<Product> {
-    const product = await this.productRepo.findOne({ where: { id } });
+    const product = await this.productRepo.findOne({ where: { id }, relations: ['group'] });
     if (!product) throw new NotFoundException('Product not found');
     return product;
   }

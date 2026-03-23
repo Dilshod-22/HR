@@ -17,6 +17,10 @@ import ReceiptsFormPage from './pages/ReceiptsFormPage';
 import ContractsPage from './pages/ContractsPage';
 import ContractFormPage from './pages/ContractFormPage';
 import MainPage from './pages/mainPage';
+import CounterpartiesPage from './pages/CounterpartiesPage';
+import ProductGroupsPage from './pages/ProductGroupsPage';
+import StockReceiptsPage from './pages/StockReceiptsPage';
+import StockReportPage from './pages/StockReportPage';
 
 const router = createBrowserRouter([
   { path: ROUTES.LOGIN, element: <LoginPage /> },
@@ -44,6 +48,10 @@ const router = createBrowserRouter([
       { path: 'contracts', element: <ContractsPage /> },
       { path: 'contracts/new', element: <ContractFormPage /> },
       { path: 'contracts/:id/edit', element: <ContractFormPage /> },
+      { path: 'counterparties', element: <CounterpartiesPage /> },
+      { path: 'product-groups', element: <ProductGroupsPage /> },
+      { path: 'stock-receipts', element: <StockReceiptsPage /> },
+      { path: 'stock-report', element: <StockReportPage /> },
     ],
   },
   { path: '*', element: <Navigate to={ROUTES.HOME} replace /> },
